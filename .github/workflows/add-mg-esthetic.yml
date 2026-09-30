@@ -14,16 +14,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download MG ESTHETIC website
-        env:
-          ZIP_URL: "https://upload.higgsfield.ai/user_30YKdq9mBazDVaWFFpm1pIvksNh/617ca498-064a-43dd-a72c-75343c988631.zip?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAYPNTVMCGYPGUA2M3%2F20260930%2Feu-north-1%2Fs3%2Faws4_request&X-Amz-Date=20260930T142216Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=content-type%3Bhost%3Bif-none-match&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCmV1LW5vcnRoLTEiRjBEAiAdDC5AwMEjlM7G5ge97g6py9U82UyGB5TS%2F84rDDLTIQIgXy9bbrsqz5BxRhycsPwj%2BMgJl8arNLwl2VRUYnLB7R0qpwUIZhAAGgw1ODI4ODE3MzA3MDEiDOIi%2Fr3AL%2BcndBTlEiqEBRRjsBqsnREAnNKQZVDu8mWPoSzHKKsJ1eAq9J%2FecKnCRl3tQGovZtFW6tzDcYH334OYoKeUTpYRUDG2qwCriHMA1F0Pm3O4OgnmzwLVWFtBVZeiVRzI9Lt7jPW%2FLnX6tSyLKAVJpVi9l%2BKQ4N3KAsMqV2r4iZI8gT4OdOTbM3L9f07W7k2IpZgAsKgblMnNm%2FHzmKMxvSFVLE1PIUtkAnoJU%2F6QKpJhGtaX8xPxRjF2951mwkMp2kDv9WKKagwX6wB9KBBnJyGFosAHAhsqKqKdvKFBpIFPb0t%2BpGmLWAJFk23BI0J2i24nUQe6teXkTvzXBEUcSrO9ObAxomah4R8WoGM7V6MVj99ZO%2FXjkV5hQthNEuvArr0pkuRFvysgsnVHTSWoHIPcBL6u7UbJFA5dDMb4az4GAe7WLOIBEUKwf1DGM88aR%2B63GKH7beNcxzhip4A6mInK3P2rEX9f7PS9C5mn4NoiUL1Z%2FiFc6dnSKNZZidX6ub1GH3UXPeBXMixL5kLGcZQ8UjVGe9F%2FP2JkJa8ceMbxdVVwauP4Q3J57%2BeHQvOZgG2XrMnl9Cc8Rr4RhIv7miNEcNF3e04w7j58Aj%2B9wznmbW5KlHSa8C5bseavrRViWVOdjNKXAdBSFLUzdqQ%2FLG4vbHr7jGKfSlZEsNlLKZpdOE3aRWHpl3gHVht4NmSLF2frWcfQS1BvIYG10KjxfkaCYrPi0WWfGLnvox7se%2BVtCv%2BGCLrFpuhWa7hcaJe6hG28l0Z4NOoRVf%2FKgxNZJc98TYieo4pQpsitEj4eo8AYhZ6hNQs6bOFwHS9yXP6NK7XZSSOnHiG2XyKMqSyQTw7PkCAqvt5lNr8RSr1vntMLet9NUGOpEB%2FZKPxwzudaYgR0K%2FaLUIFKb3Mq6Tb0ajgxG%2FhAOmvLksCQhVOBrKBTfH29VecYMyU9qWPCBdaof9ZF3TD7u6OagGowLHziTnXOrrPGS%2B3%2FYlq8VuGXPPNselNpbyW562FiHEoWvqQP%2BRf8AgT%2FxEtuxVNPqDQKXh4cjDJ%2BB5%2FzY6aoSA55ZZoWpOK%2B0Asy9oeA%3D%3D&X-Amz-Signature=f6a2a2281e23ddba9ba8f93d8c8432df8dbda3ff660d33586a42e24f89cadcf6"
+
+      - name: Package MG ESTHETIC website
         run: |
+          set -euo pipefail
           test ! -e MG-ESTHETIC-website.zip
-          curl --fail --location --retry 3 -H "Content-Type: application/zip" -H "If-None-Match:" --output MG-ESTHETIC-website.zip "$ZIP_URL"
+          test -f MG-ESTHETIC/index.html
+          zip -qr MG-ESTHETIC-website.zip MG-ESTHETIC
           test -s MG-ESTHETIC-website.zip
           unzip -t MG-ESTHETIC-website.zip >/dev/null
+
       - name: Commit ZIP without replacing existing files
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add MG-ESTHETIC-website.zip
