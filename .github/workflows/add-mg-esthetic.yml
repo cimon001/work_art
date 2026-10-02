@@ -3,8 +3,8 @@ name: Add MG ESTHETIC ZIP
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - "MG-ESTHETIC-website.zip"
+    paths:
+      - "MG-ESTHETIC/**"
 
 permissions:
   contents: write
